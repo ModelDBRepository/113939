@@ -1,0 +1,106 @@
+<!DOCTYPE neuroml>
+<neuroml class="NeuromlPkg" version="1.3(KInNeSS)" author="Anatoli Gorchetchnikov" keywords="" description="Network to test performance for the paper using Hodgkin-Huxley spike generation" date="2007-11-30" >
+ <models>
+  <model class="NetworkPkg" name="KInNeSS_libkingeneric" >
+   <network name="PaperHH" lastEdited="Network->Inhibitory->Soma" >
+    <populations>
+     <population name="Excitatory" lastEdited="Excitatory->Soma->4: GABA_A Fast" >
+      <structure factorX="2" factorY="2" class="Grid2DStructure" scalingX="up" type="external" scalingY="up" />
+      <neuron class="CableNeuron" >
+       <structure class="tree" >
+        <OrientedSubstructure output="false" diameter="0.002" length="0.005" monitorSpikes="true" E_leak="-60" g_leak="0.01" name="Soma" lastEdited="Compartment" monitor="false" >
+         <channel name="Injection" lastEdited="1: My Channel" >
+          <gatingVariable dependency="injection" input1="1e-07" input2="0" name="m1" input3="0" input4="0" >
+           <refToSourceMethod target="connectFromMany" offset="scaled" >
+            <Kernel ring="false" sigma_x="0.45" borderEffect="wrap" sigma_y="0.45" />
+           </refToSourceMethod>
+          </gatingVariable>
+         </channel>
+         <channel g_bar="50" equilibriumPotential="50" name="Na (Traub &amp; Miles, 91)" lastEdited="1: My Channel" >
+          <gatingVariable exponent="3" format="alpha/beta" dependency="voltage" name="m1" representationForm="Parametrised" >
+           <representation>
+            <forward category="Linoid" V0="13" A="0.32" B="4" />
+            <backward category="Linoid" V0="40" A="-0.28" B="-5" />
+           </representation>
+          </gatingVariable>
+          <gatingVariable exponent="1" format="alpha/beta" dependency="voltage" name="m2" representationForm="Parametrised" >
+           <representation>
+            <forward category="Exponential" V0="17" A="0.128" B="18" />
+            <backward category="Sigmoid" V0="40" A="4" B="5" />
+           </representation>
+          </gatingVariable>
+         </channel>
+         <channel g_bar="30" equilibriumPotential="-90" name="K_dr (Traub &amp; Miles, 91)" lastEdited="1: My Channel" >
+          <gatingVariable exponent="4" dependency="voltage" format="alpha/beta" name="m1" representationForm="Parametrised" >
+           <representation>
+            <forward category="Linoid" V0="15" A="0.032" B="5" />
+            <backward category="Exponential" V0="10" A="0.5" B="40" />
+           </representation>
+          </gatingVariable>
+         </channel>
+         <channel g_bar="2.5" equilibriumPotential="-70" name="GABA_A Fast" lastEdited="1: My Channel" >
+          <gatingVariable tau_r="1" dependency="ligand" tau_f="7" name="m1" >
+           <projection modifiable="false" >
+            <refToPopulation target="Inhibitory" >
+             <axonalDelay value="1" type="fixed" />
+            </refToPopulation>
+            <refToSourceMethod target="connectFromMany" offset="scaled" >
+             <Kernel ring="false" sigma_x="1.15" borderEffect="wrap" sigma_y="1.15" />
+             <synapticWeight value="0.45" type="fixed" />
+            </refToSourceMethod>
+           </projection>
+          </gatingVariable>
+         </channel>
+        </OrientedSubstructure>
+       </structure>
+      </neuron>
+     </population>
+     <population name="Inhibitory" lastEdited="Inhibitory->Soma->3: AMPA" >
+      <structure class="Grid2DStructure" type="external" />
+      <neuron class="CableNeuron" >
+       <structure class="tree" >
+        <OrientedSubstructure output="false" diameter="0.002" length="0.002" g_leak="0.025" E_leak="-60" monitorSpikes="true" name="Soma" lastEdited="Compartment" monitor="false" >
+         <channel g_bar="50" equilibriumPotential="50" name="Na (Traub &amp; Miles, 91)" lastEdited="1: My Channel" >
+          <gatingVariable exponent="3" dependency="voltage" format="alpha/beta" name="m1" representationForm="Parametrised" >
+           <representation>
+            <forward category="Linoid" V0="13" A="0.32" B="4" />
+            <backward category="Linoid" V0="40" A="-0.28" B="-5" />
+           </representation>
+          </gatingVariable>
+          <gatingVariable exponent="1" dependency="voltage" format="alpha/beta" name="m2" representationForm="Parametrised" >
+           <representation>
+            <forward category="Exponential" V0="17" A="0.128" B="18" />
+            <backward category="Sigmoid" V0="40" A="4" B="5" />
+           </representation>
+          </gatingVariable>
+         </channel>
+         <channel g_bar="30" equilibriumPotential="-90" name="K_dr (Traub &amp; Miles, 91)" lastEdited="1: My Channel" >
+          <gatingVariable exponent="4" format="alpha/beta" dependency="voltage" name="m1" representationForm="Parametrised" >
+           <representation>
+            <forward category="Linoid" V0="15" A="0.032" B="5" />
+            <backward category="Exponential" V0="10" A="0.5" B="40" />
+           </representation>
+          </gatingVariable>
+         </channel>
+         <channel g_bar="0.1" equilibriumPotential="0" name="AMPA" lastEdited="1: My Channel" >
+          <gatingVariable tau_r="2" dependency="ligand" tau_f="2" name="m1" >
+           <projection modifiable="false" >
+            <refToPopulation target="Excitatory" >
+             <axonalDelay type="fixed" value="1" />
+            </refToPopulation>
+            <refToSourceMethod offset="scaled" target="connectFromMany" >
+             <Kernel ring="false" sigma_x="1" sigma_y="1" borderEffect="wrap" />
+             <synapticWeight type="fixed" value="0.25" />
+            </refToSourceMethod>
+           </projection>
+          </gatingVariable>
+         </channel>
+        </OrientedSubstructure>
+       </structure>
+      </neuron>
+     </population>
+    </populations>
+   </network>
+  </model>
+ </models>
+</neuroml>
